@@ -4,18 +4,18 @@ import { useQuery, QueryClient } from "@tanstack/react-query"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import api from "../api"
-import { Product } from "../types"
+import { Category, Product } from "../types"
 import {
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow
 } from "../components/ui/table"
-import { NavBar } from "@/components/ui/navBar"
+import { NavBar } from "@/components/navBar"
+import { EditDialog } from "@/components/editDialog"
 
 export function Dashboard() {
   const queryClient = new QueryClient()
@@ -44,7 +44,15 @@ export function Dashboard() {
       return Promise.reject(new Error("Something went wrong"))
     }
   }
-
+  const deleteProduct = async (id: string) => {
+    try {
+      const res = await api.delete(`/products/${id}`)
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
+  }
   const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await postProduct()
@@ -52,6 +60,12 @@ export function Dashboard() {
     queryClient.invalidateQueries({ queryKey: ["products"] })
   }
 
+  const handelDeleteProduct = async (id: string) => {
+    const delConfirm = confirm("are you sure you want to delete")
+    delConfirm && (await deleteProduct(id))
+
+    queryClient.invalidateQueries({ queryKey: ["products"] })
+  }
   const getProducts = async () => {
     try {
       const res = await api.get("/products")
@@ -61,9 +75,23 @@ export function Dashboard() {
       return Promise.reject(new Error("Something went wrong"))
     }
   }
+  const getCategories = async () => {
+    try {
+      const res = await api.get("/categorys")
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
+  }
 
   // Queries
-  const { isPending, isError, data, error } = useQuery<Product[]>({
+  const {
+    isPending,
+    isError,
+    data: products,
+    error
+  } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: getProducts
   })
@@ -74,12 +102,32 @@ export function Dashboard() {
   if (isError) {
     return <span>Error: {error.message}</span>
   }
+  const { data: categories, error: catError } = useQuery<Category[]>({
+    queryKey: ["categorys"],
+    queryFn: getCategories
+  })
+  const productWithCat = products.map((product) => {
+    const category = categories?.find((cat) => cat.id === product.categoryId)
+    if (category) {
+      return {
+        ...product,
+        categoryId: category.id
+      }
+    }
+    return product
+  })
+  const handelSelect = (e) => {
+    console.log(e.target.value)
+  }
 
   return (
     <>
-    <NavBar />
-      <form className="mt-20 justify-between" onSubmit={handelSubmit}>
-        <h3>Add product</h3>
+      <NavBar />
+      <form
+        className="mt-20 justify-between w-full md:w-1/2 mx-auto mb-10 "
+        onSubmit={handelSubmit}
+      >
+        <h1>Add product</h1>
         <Input
           className="mt-2"
           name="name"
@@ -87,13 +135,15 @@ export function Dashboard() {
           placeholder="Product Name"
           onChange={handleChange}
         />
-        <Input
-          className="mt-2"
-          name="categoryId"
-          type="text"
-          placeholder="Category id"
-          onChange={handleChange}
-        />
+        <select name="category" onChange={handelSelect}>
+          {categories?.map((cat) => {
+            return (
+              <option key={cat.id} value={cat.id}>
+                {cat.categoryName}
+              </option>
+            )
+          })}
+        </select>
 
         <Input
           className="mt-2"
@@ -149,24 +199,24 @@ export function Dashboard() {
           </Button>
         </div>
       </form>
-      
+
       <div className="">
         <Table>
           <TableCaption>All Products.</TableCaption>
           <TableHeader>
             <TableRow className="justify-center">
-              <TableHead className="w-[100px]" >Name</TableHead>
+              <TableHead className="w-[100px]">Name</TableHead>
               <TableHead>Stuck</TableHead>
               <TableHead>Color</TableHead>
               <TableHead>Size</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Price</TableHead>
-              <TableHead className="text-center">Image</TableHead>  
+              <TableHead className="text-center">Image</TableHead>
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.map((product) => (
+            {products?.map((product) => (
               <TableRow key={product.id}>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.stock}</TableCell>
@@ -177,9 +227,15 @@ export function Dashboard() {
                 <TableCell>{product.img}</TableCell>
 
                 <TableCell className="text-left flex gap-5">
-                  <button className="bg-green-500 py-2  px-3 rounded-md text-white">Update</button>
-                  <button className="bg-red-500 py-2  px-3 rounded-md text-white">X</button>
+                  <EditDialog product={product} />
+                  <Button
+                    className="bg-red-500 py-2  px-3 rounded-md text-white"
+                    onClick={() => handelDeleteProduct(product.id)}
+                  >
+                    X
+                  </Button>
                 </TableCell>
+                <TableCell></TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -1,9 +1,11 @@
 import { GlobalContext } from "@/App"
 import { useContext } from "react"
 
-import { Button } from "./button"
+
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
 import { ShoppingBagIcon } from "lucide-react"
+import { Button } from "./ui/button"
+
 
 export function Cart() {
   const context = useContext(GlobalContext)
