@@ -6,11 +6,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 
 import { Product } from "@/types"
-import { useQuery } from "@tanstack/react-query"
-import { ChangeEvent, useContext, useState } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useContext, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
 export function Home(){
 
+  const [searchParams, setSearchParams] = useSearchParams()
+  const defaultSearch = searchParams.get("searchBy") || ""
+  const queryClient = useQueryClient()
+  const [searchBy, setSearchBy] = useState(defaultSearch)
+  console.log("searchBy " + searchBy)
 
   const context =useContext(GlobalContext)
   if (!context) throw Error("Context is missing")
@@ -19,7 +25,7 @@ export function Home(){
 
     const getProducts = async () => {
         try {
-          const res = await api.get("/products")
+          const res = await api.get(`/products?searchBy=${searchBy}`)
           return res.data
         } catch (error) {
           console.error(error)
@@ -31,14 +37,33 @@ export function Home(){
     queryFn: getProducts
   })
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    setSearchBy(value)
+  }
 
-
+  const handleSubmitSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    queryClient.invalidateQueries({ queryKey: ["products"] })
+    setSearchParams({
+      ...searchParams,
+      searchBy: searchBy
+    })
+  }
 return(
   <>
     <NavBar />
-    <div  className=" w-full md:w-1/2 mx-auto mb-10" >
-    <Input type="search" placeholder="Search for a product" />
-    </div>
+    <div>
+        <form onSubmit={handleSubmitSearch} className="flex gap-3 w-1/2 mt-5 mb-5 mx-auto">
+          <Input
+            type="search"
+            placeholder="Search for a product"
+            value={searchBy}
+            onChange={handleChange}
+          />
+          <Button type="submit">Search</Button>
+        </form>
+      </div>
  <div className="App">
     <section className="flex flex-col md:flex-row gap-4 justify-between max-w-6xl mx-auto flex-wrap">
       {data?.map((product) => (
