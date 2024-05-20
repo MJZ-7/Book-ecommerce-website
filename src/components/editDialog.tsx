@@ -18,7 +18,7 @@ import { QueryClient } from "@tanstack/react-query"
 export function EditDialog({ product }: { product: Product }) {
   const queryClient = new QueryClient()
   const [updatedProduct, setUpdatedProduct] = useState(product)
-
+console.log(updatedProduct)
   const updateProduct = async () => {
     try {
       const res = await api.patch(`/products/${updatedProduct.id}`, updatedProduct)
@@ -29,10 +29,10 @@ export function EditDialog({ product }: { product: Product }) {
     }
   }
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
+    const { name,value } = e.target
      setUpdatedProduct({
       ...updatedProduct,
-      name: value
+      [name]: value
     })
   }
 
@@ -49,20 +49,78 @@ export function EditDialog({ product }: { product: Product }) {
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when youre done.
+            Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
+
+            <Label htmlFor="size" className="text-right">
+             size
+            </Label>
+            <Input
+              name="size"
+              defaultValue={product.size}
+              className="col-span-3"
+              onChange={handleChange}   
+            />
+
             <Label htmlFor="name" className="text-right">
               Name
             </Label>
             <Input
-              id="name"
+              name="name"
               defaultValue={product.name}
               className="col-span-3"
               onChange={handleChange}   
             />
+            <Label htmlFor="description" className="text-right">
+            description
+            </Label>
+            <Input
+              name="description"
+              defaultValue={product.description}
+              className="col-span-3"
+              onChange={handleChange}   
+            />
+               <Label htmlFor="stock" className="text-right">
+            stock
+            </Label>
+            <Input
+              name="stock"
+              defaultValue={product.stock}
+              className="col-span-3"
+              onChange={handleChange}   
+            />
+
+            <Label htmlFor="Price" className="text-right">
+              Price
+            </Label>
+            <Input
+              name="price"
+              defaultValue={product.price}
+              className="col-span-3"
+              onChange={handleChange}   
+            />
+              <Label htmlFor="img" className="text-right">
+              image
+            </Label>
+              <Input
+              name="img"
+              defaultValue={product.img}
+              className="col-span-3"
+              onChange={handleChange}   
+            />
+            <Label htmlFor="color" className="text-right">
+              Color
+            </Label>
+            <Input
+              name="color"
+              defaultValue={product.color}
+              className="col-span-3"
+              onChange={handleChange}   
+            />
+          
             
           </div>
         </div>

@@ -8,15 +8,15 @@ import { Input } from "@/components/ui/input"
 import { Product } from "@/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useContext, useState } from "react"
-import { useSearchParams } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 
 export function Home(){
 
   const [searchParams, setSearchParams] = useSearchParams()
   const defaultSearch = searchParams.get("searchBy") || ""
+  
   const queryClient = useQueryClient()
   const [searchBy, setSearchBy] = useState(defaultSearch)
-  console.log("searchBy " + searchBy)
 
   const context =useContext(GlobalContext)
   if (!context) throw Error("Context is missing")
@@ -36,7 +36,7 @@ export function Home(){
     queryKey: ["products"],
     queryFn: getProducts
   })
-
+console.log("data",data)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     setSearchBy(value)
@@ -70,15 +70,19 @@ return(
         <Card key={product.id} className="w-[350px]">
           <CardHeader>
             <CardTitle>{product.name}</CardTitle>
-            <CardDescription>Some Description here</CardDescription>
           </CardHeader>
           <CardHeader>
            <img src={product.img} alt={product.name} className="mb-1 h-50 object-contain"/>
           </CardHeader> 
           <CardContent>
+          <CardDescription>Some Description here</CardDescription>
             {product.description}
+            
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex justify-evenly">
+          <Link to={`products/${product.id}`}>
+                <Button className="w-full"variant={"outline"} >More Details</Button>
+              </Link>
             <Button className="w-full" onClick={()=>{handleAddToCart(product)}}>Add to cart</Button>
           </CardFooter>
         </Card>

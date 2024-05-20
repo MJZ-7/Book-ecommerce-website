@@ -54,17 +54,17 @@ export function Dashboard() {
     }
   }
   const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(product)
     e.preventDefault()
     await postProduct()
-
     queryClient.invalidateQueries({ queryKey: ["products"] })
   }
 
   const handelDeleteProduct = async (id: string) => {
     const delConfirm = confirm("are you sure you want to delete")
     delConfirm && (await deleteProduct(id))
+    queryClient.invalidateQueries({ queryKey: ["products"]})
 
-    queryClient.invalidateQueries({ queryKey: ["products"] })
   }
   const getProducts = async () => {
     try {
@@ -95,6 +95,12 @@ export function Dashboard() {
     queryKey: ["products"],
     queryFn: getProducts
   })
+
+  const { data: categories, error: catError } = useQuery<Category[]>({
+    queryKey: ["categorys"],
+    queryFn: getCategories
+  })
+
   if (isPending) {
     return <span>Loading...</span>
   }
@@ -102,23 +108,27 @@ export function Dashboard() {
   if (isError) {
     return <span>Error: {error.message}</span>
   }
-  const { data: categories, error: catError } = useQuery<Category[]>({
-    queryKey: ["categorys"],
-    queryFn: getCategories
-  })
+  
+  
   const productWithCat = products.map((product) => {
     const category = categories?.find((cat) => cat.id === product.categoryId)
     if (category) {
       return {
         ...product,
-        categoryId: category.id
+        categoryId: category.categoryName
+        
       }
     }
     return product
   })
   const handelSelect = (e) => {
-    console.log(e.target.value)
-  }
+    console.log(e.target.value);
+    setProduct ({
+      ...product,
+      categoryId: e.target.value
+
+    })
+    }
 
   return (
     <>
@@ -135,10 +145,10 @@ export function Dashboard() {
           placeholder="Product Name"
           onChange={handleChange}
         />
-        <select name="category" onChange={handelSelect}>
+        <select name="categoryId" onChange={handelSelect} >
           {categories?.map((cat) => {
             return (
-              <option key={cat.id} value={cat.id}>
+              <option key={cat.id} value={cat.id} >
                 {cat.categoryName}
               </option>
             )
@@ -190,17 +200,17 @@ export function Dashboard() {
           placeholder="color"
           onChange={handleChange}
         />
-        <div className="flex justify-between  ">
+        <div className="flex justify-between  mt-4">
           <Button type="reset" variant="outline">
             reset
           </Button>
-          <Button type="submit" className="mt-4">
+          <Button type="submit">
             Add product
           </Button>
         </div>
       </form>
 
-      <div className="">
+      <div className="mt-20 justify-between w-full md:w-1/2 mx-auto mb-10">
         <Table>
           <TableCaption>All Products.</TableCaption>
           <TableHeader>
@@ -216,9 +226,9 @@ export function Dashboard() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products?.map((product) => (
+            {productWithCat?.map((product) => (
               <TableRow key={product.id}>
-                <TableCell className="font-medium">{product.name}</TableCell>
+                <TableCell>{product.name}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>{product.color}</TableCell>
                 <TableCell>{product.size}</TableCell>

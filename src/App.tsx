@@ -5,6 +5,10 @@ import { Home } from "./Pages/home"
 import { createContext, useState } from "react"
 import { Product } from "./types"
 import { Dashboard } from "./Pages/dashboard"
+import {ProductDetails} from "./Pages/productDetails"
+import { Login } from "./Pages/login"
+import { SignUp } from "./Pages/signup"
+
 
 const router = createBrowserRouter([
   {
@@ -14,6 +18,18 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />
+  },
+  {
+    path: "/products/:productId",
+    element: <ProductDetails />
+  },
+  {
+    path: "/login",
+    element: <Login/>
+  },
+  {
+    path: "signup",
+    element: <SignUp />
   }
 ])
 type GlobalContextType = {
@@ -24,6 +40,8 @@ type GlobalContextType = {
 type GlobalState = {
   cart: Product[]
 }
+
+
 export const GlobalContext = createContext<GlobalContextType | null>(null)
 
 function App() {
@@ -38,17 +56,20 @@ function App() {
     })
   }
   const handelDeleteFromCart = (id: string) => {
-    const filteredCart = state.cart.filter((item) => item.id !== id)
+    const productIndex = state.cart.findIndex(item => item.id === id)
+    const updatedCart = state.cart
+    updatedCart.splice(productIndex, 1)
+
 
     setState({
       ...state,
-      cart: filteredCart
+      cart: updatedCart
     })
-  }
+  } 
 
   return (
     <div className="app">
-      <GlobalContext.Provider value={{ state, handleAddToCart, handelDeleteFromCart}}>
+      <GlobalContext.Provider value={{ state, handleAddToCart, handelDeleteFromCart }}>
         <RouterProvider router={router} />
       </GlobalContext.Provider>
     </div>
