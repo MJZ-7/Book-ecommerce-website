@@ -2,7 +2,7 @@ import api from "@/api"
 import { NavBar } from "@/components/navBar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useState } from "react"
 import { Link } from "react-router-dom"
 
 export function SignUp(){
@@ -12,9 +12,9 @@ export function SignUp(){
         password: ""
       })
       console.log(user)
-    const handleSignup = async () => {
+    const handleSignUp = async () => {
         try {
-          const res = await api.post(`/users/signup`)
+          const res = await api.post(`/users/signup`, user)
           return res.data
         } catch (error) {
           console.error(error)
@@ -30,12 +30,17 @@ export function SignUp(){
        })
 
     }
+    const handleSubmit = async (e: FormEvent)=>{
+        e.preventDefault() 
+       await handleSignUp()
+    }
     return(
         <>
         <NavBar/>
-        <form
-    className="mt-20 justify-between w-full md:w-1/2 mx-auto mb-10">
-    <h1>SIGNUP</h1>
+        <div>
+        <h1>SIGNUP</h1>
+        <form onSubmit={handleSubmit} className="mt-20 justify-between w-full md:w-1/2 mx-auto mb-10" >
+
     <Input
       className="mt-2"
       name="fullName"
@@ -57,13 +62,17 @@ export function SignUp(){
       placeholder="Password"
       onChange={handleChange}
     />
-    </form>
+    
+    
     <div>
-        <Button className="mt-4">SIGNUP</Button>
+        <Button className="mt-4" >SIGNUP</Button>
         <Button variant={"link"} className="mt-4">
         <Link to="/login">Have an account already?</Link>
         </Button>
+
     </div>
+    </form>
+    </div> 
     </>
     )
 }

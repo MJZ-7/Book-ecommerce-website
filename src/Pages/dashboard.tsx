@@ -1,10 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useQuery, QueryClient } from "@tanstack/react-query"
 
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import api from "../api"
-import { Category, Product } from "../types"
+import { Category, DecodedUser, Product, ROLE, User } from "../types"
 import {
   Table,
   TableBody,
@@ -16,9 +16,13 @@ import {
 } from "../components/ui/table"
 import { NavBar } from "@/components/navBar"
 import { EditDialog } from "@/components/editDialog"
+import jwtDecode from "jwt-decode"
+import { useNavigate } from "react-router-dom"
 
 export function Dashboard() {
   const queryClient = new QueryClient()
+  const navigate = useNavigate()
+  
   const [product, setProduct] = useState({
     name: "",
     categoryId: "",
@@ -29,15 +33,50 @@ export function Dashboard() {
     color: ""
   })
 
+  const token = localStorage.getItem("token") || ""
+  const decodedToken = jwtDecode(token)
+  const decodedUser: any = {}
+
+  if (decodedToken) {
+    for (const [key, value] of Object.entries(decodedToken)) {
+      let cleanKey= ""
+
+      if(key.startsWith("http")){
+        cleanKey = key.split("identity/claims/")[1]
+
+    }else{
+      cleanKey= key
+    }
+    decodedUser[cleanKey] = value
+  }
+  }
+  console.log("dec",decodedUser.role)
+  console.log("role",ROLE.customer)
+  useEffect(()=>{
+    if(decodedUser.role === ROLE.customer){
+      return navigate("/")
+    }
+  },[])
+
+  console.log("token", decodedToken)  
+  console.log("decoded user", decodedUser)
+
+
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    console.log({ name, value })
     setProduct({ ...product, [name]: value })
   }
 
   const postProduct = async () => {
+    const token = localStorage.getItem("token")
     try {
-      const res = await api.post("/products", product)
+      const res = await api.post("/products", product, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       return res.data
     } catch (error) {
       console.error(error)
@@ -45,8 +84,13 @@ export function Dashboard() {
     }
   }
   const deleteProduct = async (id: string) => {
+    const token = localStorage.getItem("token")
     try {
-      const res = await api.delete(`/products/${id}`)
+      const res = await api.delete(`/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       return res.data
     } catch (error) {
       console.error(error)
@@ -54,7 +98,6 @@ export function Dashboard() {
     }
   }
   const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(product)
     e.preventDefault()
     await postProduct()
     queryClient.invalidateQueries({ queryKey: ["products"] })
@@ -63,8 +106,7 @@ export function Dashboard() {
   const handelDeleteProduct = async (id: string) => {
     const delConfirm = confirm("are you sure you want to delete")
     delConfirm && (await deleteProduct(id))
-    queryClient.invalidateQueries({ queryKey: ["products"]})
-
+    queryClient.invalidateQueries({ queryKey: ["products"] })
   }
   const getProducts = async () => {
     try {
@@ -85,6 +127,20 @@ export function Dashboard() {
     }
   }
 
+  const getUsers = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      const res = await api.get("/users", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
+  }
   // Queries
   const {
     isPending,
@@ -100,6 +156,10 @@ export function Dashboard() {
     queryKey: ["categorys"],
     queryFn: getCategories
   })
+  const { data: users, error: userError } = useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: getUsers
+  })
 
   if (isPending) {
     return <span>Loading...</span>
@@ -108,27 +168,23 @@ export function Dashboard() {
   if (isError) {
     return <span>Error: {error.message}</span>
   }
-  
-  
+
   const productWithCat = products.map((product) => {
     const category = categories?.find((cat) => cat.id === product.categoryId)
     if (category) {
       return {
         ...product,
         categoryId: category.categoryName
-        
       }
     }
     return product
   })
   const handelSelect = (e) => {
-    console.log(e.target.value);
-    setProduct ({
+    setProduct({
       ...product,
       categoryId: e.target.value
-
     })
-    }
+  }
 
   return (
     <>
@@ -145,10 +201,10 @@ export function Dashboard() {
           placeholder="Product Name"
           onChange={handleChange}
         />
-        <select name="categoryId" onChange={handelSelect} >
+        <select name="categoryId" onChange={handelSelect}>
           {categories?.map((cat) => {
             return (
-              <option key={cat.id} value={cat.id} >
+              <option key={cat.id} value={cat.id}>
                 {cat.categoryName}
               </option>
             )
@@ -204,9 +260,7 @@ export function Dashboard() {
           <Button type="reset" variant="outline">
             reset
           </Button>
-          <Button type="submit">
-            Add product
-          </Button>
+          <Button type="submit">Add product</Button>
         </div>
       </form>
 

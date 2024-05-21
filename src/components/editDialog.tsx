@@ -20,8 +20,13 @@ export function EditDialog({ product }: { product: Product }) {
   const [updatedProduct, setUpdatedProduct] = useState(product)
 console.log(updatedProduct)
   const updateProduct = async () => {
+    const token = localStorage.getItem("token")
     try {
-      const res = await api.patch(`/products/${updatedProduct.id}`, updatedProduct)
+      const res = await api.patch(`/products/${updatedProduct.id}`, updatedProduct,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
       return res.data
     } catch (error) {
       console.error(error)
