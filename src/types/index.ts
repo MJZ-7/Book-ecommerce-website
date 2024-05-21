@@ -23,8 +23,8 @@ export type User = {
 }
 
 export const ROLE = {
-  customer: "User",
-  admin: "admin"
+  User: "User",
+  Admin: "Admin"
 } as const
 
 export type DecodedUser = {
