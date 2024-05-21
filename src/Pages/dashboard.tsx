@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useQuery, QueryClient } from "@tanstack/react-query"
 
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import api from "../api"
-import { Category, DecodedUser, Product, ROLE, User } from "../types"
+import { Category, Product, User } from "../types"
 import {
   Table,
   TableBody,
@@ -16,12 +16,9 @@ import {
 } from "../components/ui/table"
 import { NavBar } from "@/components/navBar"
 import { EditDialog } from "@/components/editDialog"
-import jwtDecode from "jwt-decode"
-import { useNavigate } from "react-router-dom"
 
 export function Dashboard() {
   const queryClient = new QueryClient()
-  const navigate = useNavigate()
   
   const [product, setProduct] = useState({
     name: "",
@@ -32,37 +29,6 @@ export function Dashboard() {
     price: 0,
     color: ""
   })
-
-  const token = localStorage.getItem("token") || ""
-  const decodedToken = jwtDecode(token)
-  const decodedUser: any = {}
-
-  if (decodedToken) {
-    for (const [key, value] of Object.entries(decodedToken)) {
-      let cleanKey= ""
-
-      if(key.startsWith("http")){
-        cleanKey = key.split("identity/claims/")[1]
-
-    }else{
-      cleanKey= key
-    }
-    decodedUser[cleanKey] = value
-  }
-  }
-  console.log("dec",decodedUser.role)
-  console.log("role",ROLE.customer)
-  useEffect(()=>{
-    if(decodedUser.role === ROLE.customer){
-      return navigate("/")
-    }
-  },[])
-
-  console.log("token", decodedToken)  
-  console.log("decoded user", decodedUser)
-
-
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

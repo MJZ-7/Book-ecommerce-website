@@ -8,6 +8,7 @@ import { Dashboard } from "./Pages/dashboard"
 import {ProductDetails} from "./Pages/productDetails"
 import { Login } from "./Pages/login"
 import { SignUp } from "./Pages/signup"
+import { PrivateRoute } from "./components/PrivateRoute"
 
 
 const router = createBrowserRouter([
@@ -17,7 +18,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard />
+    element: 
+    <PrivateRoute>
+      <Dashboard/>
+      </PrivateRoute>
   },
   {
     path: "/products/:productId",
