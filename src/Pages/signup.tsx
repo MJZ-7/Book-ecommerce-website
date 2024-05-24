@@ -37,11 +37,11 @@ export function SignUp() {
     <>
       <NavBar />
       <div>
-        <h1>SIGNUP</h1>
         <form
           onSubmit={handleSubmit}
           className="mt-20 justify-between w-full md:w-1/2 mx-auto mb-10"
         >
+          <h1>SIGNUP</h1>
           <Input
             className="mt-2"
             name="fullName"

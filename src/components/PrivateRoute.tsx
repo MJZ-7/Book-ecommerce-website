@@ -8,6 +8,7 @@ import { Navigate } from "react-router-dom";
 export function PrivateRoute({children}: {children: ReactElement}){
   
     const token = localStorage.getItem("token") || ""
+    if (!token) return <Navigate to="/"/>
 
     const decodedToken = jwtDecode(token)
     const decodedUser= reShapeUser(decodedToken)
