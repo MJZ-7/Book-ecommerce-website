@@ -196,7 +196,7 @@ export function Hero() {
           <Carousel>
             <CarouselContent>
               {allProducts?.map((product) => (
-                <CarouselItem key={product.id}>
+                <CarouselItem key={product.id} className="basis-1/3">
                   <div className="relative overflow-hidden rounded-lg shadow-lg">
                     <Link className="group" to={`products/${product.id}`}>
                       <Card>
