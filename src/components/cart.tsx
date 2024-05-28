@@ -60,7 +60,7 @@ export function Cart() {
 
   return (
     <>
-      <div className="flex flex-col ">
+      <div className="flex flex-col">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b">
           <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
             <Popover>
@@ -72,7 +72,7 @@ export function Cart() {
               </PopoverTrigger>
               <PopoverContent align="end" className="w-480">
                 <div className="flex flex-col gap-4 p-4">
-                  {state.cart.length === 0 && <p>No Items</p>}
+                  {state.cart.length === 0 && <p className="text-center">No Items</p>}
                   {Object.keys(groups).map((key) => {
                     const products = groups[key]
                     const product = products[0]
@@ -81,11 +81,11 @@ export function Cart() {
                     }, 0)
 
                     return (
-                      <div className="mb-3 flex items-center gap-4 " key={product.id}>
+                      <div className="flex items-center gap-4" key={product.id}>
                         <img
                           src={product.img}
                           alt={product.bookName}
-                          className="rounded-md h-20 w-20 object-contain "
+                          className="rounded-md h-20 w-20 object-contain"
                           style={{
                             aspectRatio: "80/80",
                             objectFit: "cover"
@@ -94,22 +94,21 @@ export function Cart() {
 
                         <h6>{product.bookName}</h6>
                         <span>{total}</span>
-                        <Button variant={"outline"} onClick={() => handleAddToCart(product)}>
+                        <Button variant="outline" onClick={() => handleAddToCart(product)}>
                           +
                         </Button>
-                        <span> {products.length}</span>
-                        <Button
-                          variant={"outline"}
-                          onClick={() => handelDeleteFromCart(product.id)}
-                        >
+                        <span>{products.length}</span>
+                        <Button variant="outline" onClick={() => handelDeleteFromCart(product.id)}>
                           -
                         </Button>
                       </div>
                     )
                   })}
 
-                  <p>Total :{total} </p>
-                  <Button onClick={handleCheckout}>Checkout</Button>
+                  <p className="text-center">Total: {total}</p>
+                  <Button onClick={handleCheckout} className="w-full">
+                    Checkout
+                  </Button>
                 </div>
               </PopoverContent>
             </Popover>

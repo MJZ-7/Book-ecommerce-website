@@ -1,3 +1,6 @@
+import { useQuery, QueryClient } from "@tanstack/react-query"
+import { Product, Category } from "@/types"
+
 import {
   Select,
   SelectTrigger,
@@ -10,8 +13,7 @@ import {
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import api from "@/api"
-import { Product, Category } from "@/types"
-import { useQuery, QueryClient } from "@tanstack/react-query"
+
 import { useState } from "react"
 
 export function AddProduct() {

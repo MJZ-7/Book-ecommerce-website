@@ -49,7 +49,7 @@ export function CarouselHero() {
           <Carousel>
             <CarouselContent>
               {products?.map((product) => (
-                <CarouselItem key={product.id}>
+                <CarouselItem key={product.id} className="basis-1/3">
                   <div className="relative overflow-hidden rounded-lg shadow-lg">
                     <Link className="group" to={`products/${product.id}`}>
                       <Card>
@@ -57,7 +57,7 @@ export function CarouselHero() {
                           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent group-hover:from-gray-900/60 transition-colors duration-300" />
                           <div className="absolute bottom-4 left-4 text-white group-hover:bottom-6 transition-all duration-300">
                             <h3 className="text-lg font-bold mb-1">{product.bookName}</h3>
-                            <p className="text-sm">{product.writerName} skdfvfksldvsDz</p>
+                            <p className="text-sm">{product.writerName}</p>
                           </div>
                           <img
                             alt="Book Cover"

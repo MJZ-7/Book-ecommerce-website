@@ -8,7 +8,7 @@ import { Dashboard } from "./Pages/dashboard"
 import { ProductDetails } from "./Pages/productDetails"
 import { Login } from "./Pages/login"
 import { SignUp } from "./Pages/signup"
-import { PrivateRoute } from "./components/PrivateRoute"
+import { PrivateRoute } from "./routes/PrivateRoute"
 import { ContactUs } from "./Pages/contactus"
 import UserManage from "./Pages/usersmanage"
 
