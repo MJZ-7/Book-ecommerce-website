@@ -8,8 +8,9 @@ import { Dashboard } from "./Pages/dashboard"
 import { ProductDetails } from "./Pages/productDetails"
 import { Login } from "./Pages/login"
 import { SignUp } from "./Pages/signup"
-import { PrivateRoute } from "./components/PrivateRoute"
+import { PrivateRoute } from "./routes/PrivateRoute"
 import { ContactUs } from "./Pages/contactus"
+import UserManage from "./Pages/usersmanage"
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
   {
     path: "/contactus",
     element: <ContactUs />
+  },
+  {
+    path: "/usersmanage",
+    element: (
+      <PrivateRoute>
+        <UserManage />
+      </PrivateRoute>
+    )
   }
 ])
 type GlobalContextType = {
@@ -47,6 +56,7 @@ type GlobalContextType = {
   handelDeleteFromCart: (id: string) => void
   handelStoreUser: (user: DecodedUser) => void
   handelRemoveUser: () => void
+  handleRemoveCart: () => void
 }
 type GlobalState = {
   cart: Product[]
@@ -98,11 +108,24 @@ function App() {
       user: null
     })
   }
+  const handleRemoveCart = () => {
+    setState({
+      ...state,
+      cart: []
+    })
+  }
 
   return (
     <div className="app">
       <GlobalContext.Provider
-        value={{ state, handleAddToCart, handelDeleteFromCart, handelStoreUser, handelRemoveUser }}
+        value={{
+          state,
+          handleAddToCart,
+          handelDeleteFromCart,
+          handelStoreUser,
+          handelRemoveUser,
+          handleRemoveCart
+        }}
       >
         <RouterProvider router={router} />
       </GlobalContext.Provider>

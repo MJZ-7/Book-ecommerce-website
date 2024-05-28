@@ -6,6 +6,14 @@ import { Link } from "react-router-dom"
 import { NavBar } from "./navBar"
 import { useContext, useState } from "react"
 import { GlobalContext } from "@/App"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "./ui/carousel"
+import { Card, CardContent } from "./ui/card"
 
 export function Hero() {
   const context = useContext(GlobalContext)
@@ -22,11 +30,19 @@ export function Hero() {
     price: 0,
     img: ""
   })
-  const [bookCover, setbookCover] = useState("")
-
   const getProducts = async () => {
     try {
-      const res = await api.get(`/products/`)
+      const res = await api.get(`/products/?limit=${1}&offset=${0}`)
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
+  }
+
+  const getAllProducts = async () => {
+    try {
+      const res = await api.get("products")
       return res.data
     } catch (error) {
       console.error(error)
@@ -37,6 +53,10 @@ export function Hero() {
     queryKey: ["products"],
     queryFn: getProducts
   })
+  const { data: allProducts, error: Perror } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: getAllProducts
+  })
 
   return (
     <>
@@ -44,7 +64,7 @@ export function Hero() {
       <div className="flex min-h-screen  mt-5">
         <main className="flex-1">
           <section className="bg-gray-100 dark:bg-gray-800 py-12 md:py-16 lg:py-20">
-            {products?.map((product) => (
+            {allProducts?.map((product) => (
               <div
                 key={product.id}
                 className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16"
@@ -100,8 +120,8 @@ export function Hero() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent group-hover:from-gray-900/60 transition-colors duration-300" />
                     <div className="absolute bottom-4 left-4 text-white group-hover:bottom-6 transition-all duration-300">
-                      <h3 className="text-lg font-bold mb-1">The Midnight Library</h3>
-                      <p className="text-sm">Matt Haig</p>
+                      <h3 className="text-lg font-bold mb-1">{product.name}</h3>
+                      <p className="text-sm">{product.WriterName}</p>
                     </div>
                   </div>
                 </Link>
@@ -170,6 +190,45 @@ export function Hero() {
           </section>
         </main>
       </div>
+
+      <section className="bg-white dark:bg-gray-900 py-12 md:py-16 lg:py-20">
+        <div className="grid grid-cols-5 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+          <Carousel>
+            <CarouselContent>
+              {allProducts?.map((product) => (
+                <CarouselItem key={product.id}>
+                  <div className="relative overflow-hidden rounded-lg shadow-lg">
+                    <Link className="group" to={`products/${product.id}`}>
+                      <Card>
+                        <CardContent>
+                          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent group-hover:from-gray-900/60 transition-colors duration-300" />
+                          <div className="absolute bottom-4 left-4 text-white group-hover:bottom-6 transition-all duration-300">
+                            <h3 className="text-lg font-bold mb-1">{product.bookName}</h3>
+                            <p className="text-sm">{product.writerName}</p>
+                          </div>
+                          <img
+                            alt="Book Cover"
+                            className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                            height={450}
+                            src={product.img}
+                            style={{
+                              aspectRatio: "300/450",
+                              objectFit: "cover"
+                            }}
+                            width={300}
+                          />
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </div>
+      </section>
     </>
   )
 }

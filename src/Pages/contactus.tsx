@@ -1,3 +1,4 @@
+import { Footer } from "@/components/footer"
 import { NavBar } from "@/components/navBar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,6 +30,7 @@ export function ContactUs() {
           </div>
         </section>
       </div>
+      <Footer />
     </>
   )
 }

@@ -19,6 +19,7 @@ export type User = {
   fullName: string
   role: string
   email: string
+  password: string
 }
 
 export const ROLE = {
@@ -34,4 +35,12 @@ export type DecodedUser = {
   name: string
   nameidentifier: string
   role: keyof typeof ROLE
+}
+export type OrderItem = {
+  quantity: number
+  productId: string
+}
+export type OrderCheckout = {
+  addressId: string
+  items: OrderItem[]
 }
