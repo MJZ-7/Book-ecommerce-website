@@ -36,10 +36,14 @@ export function SignUp() {
   return (
     <>
       <NavBar />
-      <div>
+      <div className="flex ">
+        <img
+          src="https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/book-shelves-david-madison.jpg"
+          className="object-cover"
+        />
         <form
           onSubmit={handleSubmit}
-          className="mt-20 justify-between w-full md:w-1/2 mx-auto mb-10"
+          className="mt-20 justify-between w-full md:w-1/2 mx-10 mb-10 px-5"
         >
           <h1>SIGNUP</h1>
           <Input

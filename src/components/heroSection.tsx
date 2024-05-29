@@ -93,9 +93,16 @@ export function Hero() {
       <section className="bg-white dark:bg-gray-900 py-12 md:py-16 lg:py-20">
         <div className="grid grid-cols-20 md:grid-cols-20 lg:grid-cols-16 gap-36 ">
           <div className="container mx-auto">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-50 mb-8">
-              New Arrivals
-            </h2>
+            <div className="space-y-2 mb-3">
+              <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
+                Bestsellers
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Top Selling Books</h2>
+              <p className=" text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+                Check out our most popular and top-selling books.
+              </p>
+            </div>
+
             <Carousel>
               <CarouselContent>
                 {allProducts?.map((product) => (
