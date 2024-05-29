@@ -36,6 +36,7 @@ import {
   ShoppingCartIcon,
   UsersIcon
 } from "lucide-react"
+import UserManage from "./usersmanage"
 
 export function Dashboard() {
   const queryClient = new QueryClient()
@@ -179,6 +180,7 @@ export function Dashboard() {
   return (
     <>
       <NavBar />
+
       <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
         <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
           <div className="flex flex-col gap-2">
@@ -228,6 +230,7 @@ export function Dashboard() {
         </div>
         <Catagories />
       </div>
+      <UserManage />
 
       <form
         className="mt-20 justify-between w-full md:w-1/2 mx-auto mb-10  bg-gray-100 dark:bg-gray-800 py-4 px-6 md:px-8 lg:px-12 "

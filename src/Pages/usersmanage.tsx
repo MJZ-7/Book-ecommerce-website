@@ -70,7 +70,6 @@ export default function UserManage() {
 
   return (
     <>
-      <NavBar />
       <div className="flex flex-col gap-8 p-4 md:p-6bg-gray-100 dark:bg-gray-800 py-4 px-6 md:px-8 lg:px-12">
         <div className="border rounded-lg">
           <Table>
