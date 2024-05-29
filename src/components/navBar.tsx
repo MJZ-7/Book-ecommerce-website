@@ -58,7 +58,7 @@ export function NavBar() {
 
           <NavigationMenuList className="gap-10">
             <NavigationMenuItem>
-              <Link to="/">
+              <Link to="/books">
                 <NavigationMenuLink>Books</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
