@@ -51,7 +51,7 @@ export function Hero() {
       <NavBar />
       <section className="relative w-full h-[80vh] overflow-hidden">
         <img
-          src="https://api.deepai.org/job-view-file/b115e0f0-480f-4aa6-98ab-4ec9e3f7434e/outputs/output.jpg"
+          src="https://miro.medium.com/v2/resize:fit:1200/1*6Jp3vJWe7VFlFHZ9WhSJng.jpeg"
           alt="KNOWLEDGE book store interior"
           className="w-full h-full object-cover object-center"
         />
@@ -68,7 +68,7 @@ export function Hero() {
           </div>
           <Link
             to="/books"
-            className="mt-8 inline-flex items-center rounded-md bg-gray-900 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            className="mt-8 inline-flex items-center rounded-md bg-neutral-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 "
           >
             Browse Books
           </Link>
