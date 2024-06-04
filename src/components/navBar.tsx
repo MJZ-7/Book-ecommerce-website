@@ -36,7 +36,7 @@ export function NavBar() {
 
   return (
     <>
-      <div className="flex items-center justify-between px-4 py-3 bg-white shadow-sm dark:bg-gray-950 dark:text-gray-50">
+      <div className="flex items-center justify-between px-4 py-3 bg-white shadow-sm dark:bg-gray-950 dark:text-gray-50 ">
         <header>
           <div className="container mx-auto flex items-center justify-between">
             <Link
@@ -75,48 +75,49 @@ export function NavBar() {
           <NavigationMenuList></NavigationMenuList>
         </NavigationMenu>
 
-        <div>
+        <div className="flex items-center gap-2 bg-white">
           <Cart />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="rounded-full">
+                <CircleUser className="h-6 w-6" />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-48 bg-white p-2 shadow-md dark:bg-gray-950 dark:shadow-gray-800"
+            >
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {state.user?.role === ROLE.Admin && (
+                <DropdownMenuItem>
+                  <a href="/dashboard">Dashboard</a>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              {!state.user && (
+                <Link to="/login">
+                  <DropdownMenuItem>Login</DropdownMenuItem>
+                </Link>
+              )}
+              {!state.user && (
+                <Link to="/signup">
+                  <DropdownMenuItem>Sign up</DropdownMenuItem>
+                </Link>
+              )}
+              {state.user && (
+                <DropdownMenuItem>
+                  <Button variant="outline" onClick={handelLogout}>
+                    Logout
+                  </Button>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="rounded-full">
-              <CircleUser className="h-6 w-6" />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-48 bg-white p-2 shadow-md dark:bg-gray-950 dark:shadow-gray-800"
-          >
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {state.user?.role === ROLE.Admin && (
-              <DropdownMenuItem>
-                <a href="/dashboard">Dashboard</a>
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            {!state.user && (
-              <Link to="/login">
-                <DropdownMenuItem>Login</DropdownMenuItem>
-              </Link>
-            )}
-            {!state.user && (
-              <Link to="/signup">
-                <DropdownMenuItem>Sign up</DropdownMenuItem>
-              </Link>
-            )}
-            {state.user && (
-              <DropdownMenuItem>
-                <Button variant="outline" onClick={handelLogout}>
-                  Logout
-                </Button>
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </>
   )

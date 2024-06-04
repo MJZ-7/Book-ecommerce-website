@@ -49,7 +49,32 @@ export function Hero() {
   return (
     <>
       <NavBar />
-      <div className="flex min-h-screen  mt-5">
+      <section className="relative w-full h-[80vh] overflow-hidden">
+        <img
+          src="https://api.deepai.org/job-view-file/b115e0f0-480f-4aa6-98ab-4ec9e3f7434e/outputs/output.jpg"
+          alt="KNOWLEDGE book store interior"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+              KNOWLEDGE BOOK STORE
+            </h1>
+            <p className="max-w-md text-lg text-gray-300">
+              Discover your next literary adventure in our charming book store, where KNOWLEDGE
+              corners and endless shelves await.
+            </p>
+          </div>
+          <Link
+            to="/books"
+            className="mt-8 inline-flex items-center rounded-md bg-gray-900 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            Browse Books
+          </Link>
+        </div>
+      </section>
+      {/* <div className="flex min-h-screen  mt-5">
         <main className="flex-1">
           <section className="bg-gray-100 dark:bg-gray-800 py-12 md:py-16 lg:py-20">
             {allProducts?.map((product) => (
@@ -88,7 +113,7 @@ export function Hero() {
             ))}
           </section>
         </main>
-      </div>
+      </div> */}
 
       <section className="bg-white dark:bg-gray-900 py-12 md:py-16 lg:py-20">
         <div className="grid grid-cols-20 md:grid-cols-20 lg:grid-cols-16 gap-36 ">

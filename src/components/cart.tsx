@@ -7,6 +7,7 @@ import { Button } from "./ui/button"
 import { Product } from "@/types"
 import { OrderCheckout } from "../types"
 import api from "@/api"
+import { Link } from "react-router-dom"
 
 export function Cart() {
   const context = useContext(GlobalContext)
@@ -38,8 +39,6 @@ export function Cart() {
     })
   })
 
-  console.log("checkoutOrder:", checkoutOrder)
-
   const handleCheckout = async () => {
     try {
       const token = localStorage.getItem("token")
@@ -65,14 +64,18 @@ export function Cart() {
           <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
             <Popover>
               <PopoverTrigger asChild>
-                <Button className="rounded-full" size="icon" variant="ghost">
-                  <ShoppingBagIcon className="h-6 w-6" />
+                <Button className="rounded-full relative" size="icon" variant="outline">
+                  <ShoppingBagIcon className="w-5 h-5" />
                   <span className="sr-only">Cart</span>
+                  <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                    {state.cart.length}
+                  </div>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="end" className="w-480">
+              <PopoverContent align="end" className="w-480 bg-white">
                 <div className="flex flex-col gap-4 p-4">
                   {state.cart.length === 0 && <p className="text-center">No Items</p>}
+
                   {Object.keys(groups).map((key) => {
                     const products = groups[key]
                     const product = products[0]
@@ -93,7 +96,7 @@ export function Cart() {
                         />
 
                         <h6>{product.bookName}</h6>
-                        <span>{total}</span>
+                        <span>{product.price}</span>
                         <Button variant="outline" onClick={() => handleAddToCart(product)}>
                           +
                         </Button>
@@ -106,9 +109,17 @@ export function Cart() {
                   })}
 
                   <p className="text-center">Total: {total}</p>
-                  <Button onClick={handleCheckout} className="w-full">
-                    Checkout
-                  </Button>
+                  <div className="flex gap-4">
+                    <Button variant="outline" className="flex-1">
+                      <Link to={`/`}> Continue Shopping</Link>
+                    </Button>
+                    {/* <Button onClick={handleCheckout} className="w-full">
+                      Checkout
+                    </Button> */}
+                    <Button className="flex-1">
+                      <Link to={`/checkout`}>Proceed to Checkout</Link>
+                    </Button>
+                  </div>
                 </div>
               </PopoverContent>
             </Popover>

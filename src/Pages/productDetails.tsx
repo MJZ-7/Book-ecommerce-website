@@ -52,7 +52,7 @@ export function ProductDetails() {
             <div>
               <img
                 alt="book cover"
-                className="w-full h-auto rounded-md object-cover"
+                className="w-auto h-auto rounded-md object-cover"
                 height={600}
                 src={product.img}
                 style={{

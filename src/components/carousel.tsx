@@ -45,7 +45,7 @@ export function CarouselHero() {
   return (
     <>
       <section className="bg-white dark:bg-gray-900 py-12 md:py-16 lg:py-20">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10 ">
           <Carousel>
             <CarouselContent>
               {products?.map((product) => (
